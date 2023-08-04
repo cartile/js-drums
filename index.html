@@ -2,14 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>JS Drum Kit</title>
+  <title>vanilla js drums</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="https://fav.farm/🔥" />
 </head>
 <body>
-
-
   <div class="keys">
+    <div class="bgs">
+      BACKGROUNDS
+      <button id="default" class="backgroundBtn backgroundBtnSelected">Default</button>
+      <button id="whiplash" class="backgroundBtn">Whiplash</button>
+      <button id="som" class="backgroundBtn">Sound of Metal</button>
+      <button id="sb" class="backgroundBtn">Stepbrothers</button>
+    </div>
     <div data-key="65" class="key">
       <kbd>A</kbd>
       <span class="sound">clap</span>
@@ -59,53 +63,68 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
-window.addEventListener("keydown", (event) => {
-  if(event.keyCode === 65){
+  const defaultBtn = document.getElementById('default');
+  const whiplashBtn = document.getElementById('whiplash');
+  const somBtn = document.getElementById('som');
+  const sbBtn = document.getElementById('sb');
+
+  let currentBg = 'default'
+
+  function updateButtons(btn) {
+    if(btn === 'default'){
+      document.getElementById(currentBg).classList.remove("backgroundBtnSelected")
+      defaultBtn.classList.add("backgroundBtnSelected")
+      currentBg = 'default'
+    }
+    if(btn === 'whiplash'){
+      document.getElementById(currentBg).classList.remove("backgroundBtnSelected")
+      whiplashBtn.classList.add("backgroundBtnSelected")
+      currentBg = 'whiplash'
+    }
+    if(btn === 'som'){
+      document.getElementById(currentBg).classList.remove("backgroundBtnSelected")
+      somBtn.classList.add("backgroundBtnSelected")
+      currentBg = 'som'
+    }
+    if(btn === 'sb'){
+      document.getElementById(currentBg).classList.remove("backgroundBtnSelected")
+      sbBtn.classList.add("backgroundBtnSelected")
+      currentBg = 'sb'
+    }
+  }
+  defaultBtn.addEventListener('click', function () {
+    document.documentElement.style.background = "url('./background1.jpg')"
+    updateButtons('default')
+  })
+  whiplashBtn.addEventListener('click', function () {
+    document.documentElement.style.background = "url('./background2.jpg')"
+    updateButtons('whiplash')
+  })
+  somBtn.addEventListener('click', function () {
+    document.documentElement.style.background = "url('./background3.jpg')"
+    updateButtons('som')
+  })
+  sbBtn.addEventListener('click', function () {
+    document.documentElement.style.background = "url('./background4.jpg')"
+    updateButtons('sb')
+  })
+  function playSound(event){
+    let keyElement = document.querySelector(`div[data-key="${event.keyCode}"]`)
     let audioElement = document.querySelector(`audio[data-key="${event.keyCode}"]`)
+
+    if(!audioElement){return}
     audioElement.currentTime = 0;
     audioElement.play()
+    keyElement.classList.add("playing")
   }
-  if(event.keyCode === 83){
-    let audioElement = document.querySelector(`audio[data-key="${event.keyCode}"]`)
-    audioElement.currentTime = 0;
-    audioElement.play()
+
+  function removeTransition(e) {
+    if (e.propertyName !== 'transform'){return}
+    e.target.classList.remove("playing")
   }
-  if(event.keyCode === 68){
-    let audioElement = document.querySelector(`audio[data-key="${event.keyCode}"]`)
-    audioElement.currentTime = 0;
-    audioElement.play()
-  }
-  if(event.keyCode === 70){
-    let audioElement = document.querySelector(`audio[data-key="${event.keyCode}"]`)
-    audioElement.currentTime = 0;
-    audioElement.play()
-  }
-  if(event.keyCode === 71){
-    let audioElement = document.querySelector(`audio[data-key="${event.keyCode}"]`)
-    audioElement.currentTime = 0;
-    audioElement.play()
-  }
-  if(event.keyCode === 72){
-    let audioElement = document.querySelector(`audio[data-key="${event.keyCode}"]`)
-    audioElement.currentTime = 0;
-    audioElement.play()
-  }
-  if(event.keyCode === 74){
-    let audioElement = document.querySelector(`audio[data-key="${event.keyCode}"]`)
-    audioElement.currentTime = 0;
-    audioElement.play()
-  }
-  if(event.keyCode === 75){
-    let audioElement = document.querySelector(`audio[data-key="${event.keyCode}"]`)
-    audioElement.currentTime = 0;
-    audioElement.play()
-  }
-  if(event.keyCode === 76){
-    let audioElement = document.querySelector(`audio[data-key="${event.keyCode}"]`)
-    audioElement.currentTime = 0;
-    audioElement.play()
-  }
-})
+  const keys = document.querySelectorAll('.key')
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition))
+  window.addEventListener("keydown", playSound)
 </script>
 
 
